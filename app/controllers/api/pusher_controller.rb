@@ -4,7 +4,7 @@ module API
   class PusherController < APIController
     def auth
       if User.find_by(identifier: params[:user_id])
-        response = authenticate_socket
+        response = Pusher.authenticate(params[:channel_name], params[:socket_id])
         render json: response, status: :ok
       else
         render json: { message: 'Forbidden' }, status: 403
@@ -29,18 +29,6 @@ module API
 
     private
 
-    def authenticate_socket
-      Pusher.authenticate(
-        params[:channel_name],
-        params[:socket_id],
-        user_id: params[:user_id],
-        user_info: {
-          platform: :web,
-          socket_id: params[:socket_id]
-        }
-      )
-    end
-
     def repository
       @_repository ||= ChannelsRepository.new
     end
@@ -50,7 +38,7 @@ module API
     end
 
     def channel_params
-      params.require(:channel).permit(:name, :user_id, device: [:socket_id, :platform])
+      params.require(:channel).permit(:name, :user_id, device: %i[socket_id platform])
     end
   end
 end

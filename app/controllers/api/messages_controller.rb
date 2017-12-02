@@ -3,18 +3,8 @@
 module API
   class MessagesController < APIController
     def create
-      NotificationsWorker.perform_async(channel, message)
+      NotificationsWorker.perform_async(params[:channel], params[:message])
       head 200
-    end
-
-    private
-
-    def channel
-      params[:channel]
-    end
-
-    def message
-      params[:message]
     end
   end
 end

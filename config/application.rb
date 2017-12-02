@@ -21,8 +21,8 @@ module PusherMe
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
-    config.autoload_paths += %W(#{config.root}/app/repositories
-                                #{config.root}/app/services)
+    config.autoload_paths += %W[#{config.root}/app/repositories
+                                #{config.root}/app/services]
 
     # Don't generate system test files.
     config.generators.system_tests = nil

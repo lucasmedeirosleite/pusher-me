@@ -6,11 +6,10 @@ class ChannelsRepository
   end
 
   def store(channel:, device:)
-    unless device(channel: channel, socket_id: device.socket_id)
-      devices = devices(channel: channel)
-      devices << device
-      cache.set(channel_key(channel), devices.to_json)
-    end
+    return if device(channel: channel, socket_id: device.socket_id)
+    devices = devices(channel: channel)
+    devices << device
+    cache.set(channel_key(channel), devices.to_json)
   end
 
   def delete(channel:, socket_id:)
