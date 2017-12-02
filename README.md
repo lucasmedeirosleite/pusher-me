@@ -37,8 +37,8 @@ When subscribing to a `channel` this component is bond to the built in event `pu
 On the backend side we have a controller called `API::PusherController` which has three actions:
 
 * `auth`: the action responsible to accept or not the WebSocket connection
-* `subscribe`: subscribes it stores the user in a `Redis` instance using the key `channels:channel-name`
-* `unsunscribe`: unsubscribe a device identied by its `socket_id`
+* `subscribe`: it stores the user in a `Redis` instance using the key `channels:channel-name` (the value is an array, that way we can know what are the devices connected in the channel)
+* `unsunscribe`: removes the device identied by its `socket_id` from the `channel` devices array.
 
 ---
 
