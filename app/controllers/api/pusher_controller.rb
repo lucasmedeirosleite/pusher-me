@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module API
   class PusherController < APIController
     def auth
@@ -10,13 +12,19 @@ module API
     end
 
     def subscribe
-      puts "**************** PARAMS: #{params}"
-      render json: { message: :success }, status: :ok
+      if repository.store(channel: channel_params[:name], device: device)
+        render json: { device: device }, status: :ok
+      else
+        head 422
+      end
     end
 
     def unsubscribe
-      puts "**************** PARAMS: #{params}"
-      render json: { message: :success }, status: :ok
+      if repository.delete(channel: params[:channel], socket_id: params[:socket_id])
+        head :ok
+      else
+        head 400
+      end
     end
 
     private
@@ -31,6 +39,18 @@ module API
           socket_id: params[:socket_id]
         }
       )
+    end
+
+    def repository
+      @_repository ||= ChannelsRepository.new
+    end
+
+    def device
+      Device.new(channel_params[:device])
+    end
+
+    def channel_params
+      params.require(:channel).permit(:name, :user_id, device: [:socket_id, :platform])
     end
   end
 end

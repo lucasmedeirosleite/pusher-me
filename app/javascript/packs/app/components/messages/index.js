@@ -11,6 +11,7 @@ import {
   Button
 } from 'react-bootstrap';
 import Pusher from '../common/pusher';
+import MessagesRepository from '../../repositories/messages_repository';
 
 export class Index extends Component {
   constructor(props) {
@@ -44,9 +45,10 @@ export class Index extends Component {
     event.preventDefault();
 
     if (this.state.message) {
-      const messages = this.state.messages;
-      messages.push({ text: this.state.message });
-      this.setState({ messages });
+      new MessagesRepository()
+        .create(this.channelName(), this.state.message)
+        .then(() => console.log('Message sent'))
+        .catch(() => console.log('Message not sent'));
     }
   }
 
@@ -55,7 +57,9 @@ export class Index extends Component {
   }
 
   handleMessageReceived(data) {
-    console.log(data);
+    const { messages } = this.state;
+    messages.push(data);
+    this.setState({ messages });
   }
 
   renderMessages() {

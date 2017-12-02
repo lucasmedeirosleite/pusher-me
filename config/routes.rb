@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     resources :users, only: :create
+    resources :messages, only: :create
 
     resources :pusher, only: [] do
       collection do
