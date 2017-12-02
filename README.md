@@ -21,7 +21,7 @@ Its properties are:
   * `params`: Extra params passed to the Pusher component so the channel authentication
   can work properly
 
-  **NOTE 1**: This is needed because we are using private channels and Pusher requires an authentication endpoint WebSocket so the connection can be accepted or not. (I also thinks we can omit this params and let the component retrieve these informations).
+  **NOTE 1**: This is needed because we are using private channels and Pusher requires an authentication endpoint so the WebSocket connection can be accepted or not. (I also thinks we can omit this params and let the component retrieve these informations).
 
   **NOTE 2**: The pusher config in the frontend part is retrieved from the `.env` file just like the backend.
 
