@@ -34,11 +34,10 @@ When subscribing to a `channel` this component is bond to the built in event `pu
 
 ---
 
-On the backend side we have a controller called `API::PusherController` which has three actions:
+On the backend side we have a controller called `API::PusherController` which has two actions:
 
 * `auth`: the action responsible to accept or not the WebSocket connection
-* `subscribe`: it stores the user in a `Redis` instance using the key `channels:channel-name` (the value is an array, that way we can know what are the devices connected in the channel)
-* `unsunscribe`: removes the device identied by its `socket_id` from the `channel` devices array.
+* `webhook`: it is the Pusher existence webhook which receives two events `channel_occupied` and `channel_vacated`. We use this events to store a `Redis` instance the key (`channels:channel-name`) a boolean value saying if the channel is occupied or not.
 
 ---
 
