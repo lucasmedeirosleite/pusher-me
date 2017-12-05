@@ -25,13 +25,6 @@ Its properties are:
 
   **NOTE 2**: The pusher config in the frontend part is retrieved from the `.env` file just like the backend.
 
-When subscribing to a `channel` this component is bond to the built in event `pusher:subscription_succeeded`, unfertunately it returns no information about the user (this information could be set in the `auth` action, but it will be only available for presence channels) that's why we listen to this event and then send the user information to the backend, the information is:
-
-  * `socket_id`: WebSocket connection ID
-  * `channel`: channel name
-  * `user_id`: User ID
-  * `platform`: Platform (In that case is `Web`, but when using from phones it could `iOS` or `Android`)
-
 ---
 
 On the backend side we have a controller called `API::PusherController` which has two actions:
