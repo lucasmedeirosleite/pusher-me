@@ -11,34 +11,14 @@ module API
       end
     end
 
-    def subscribe
-      if repository.store(channel: channel_params[:name], device: device)
-        render json: { device: device }, status: :ok
-      else
-        head 422
-      end
-    end
-
-    def unsubscribe
-      if repository.delete(channel: params[:channel], socket_id: params[:socket_id])
+    def webhook
+      webhook = Pusher::WebHook.new(request)
+      if webhook.valid?
+        WebhookEventsHandler.call(events: webhook.events)
         head :ok
       else
-        head 400
+        head :unauthorized
       end
-    end
-
-    private
-
-    def repository
-      @_repository ||= ChannelsRepository.new
-    end
-
-    def device
-      Device.new(channel_params[:device])
-    end
-
-    def channel_params
-      params.require(:channel).permit(:name, :user_id, device: %i[socket_id platform])
     end
   end
 end

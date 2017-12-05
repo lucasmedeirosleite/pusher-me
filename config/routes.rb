@@ -10,8 +10,7 @@ Rails.application.routes.draw do
     resources :pusher, only: [] do
       collection do
         post :auth
-        post :subscribe
-        delete :unsubscribe
+        post :webhook
       end
     end
   end

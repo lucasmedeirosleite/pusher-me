@@ -5,31 +5,16 @@ class ChannelsRepository
     @cache = cache
   end
 
-  def store(channel:, device:)
-    return if device(channel: channel, socket_id: device.socket_id)
-    devices = devices(channel: channel)
-    devices << device
-    cache.set(channel_key(channel), devices.to_json)
+  def store(channel:)
+    cache.set(channel_key(channel), true, nx: true)
   end
 
-  def delete(channel:, socket_id:)
-    devices = devices(channel: channel).reject do |device|
-      device.socket_id == socket_id
-    end
-
-    cache.set(channel_key(channel), devices.to_json)
+  def occupied?(channel:)
+    cache.get(channel_key(channel))
   end
 
-  def device(channel:, socket_id:)
-    devices(channel: channel).find do |device|
-      device.socket_id == socket_id
-    end
-  end
-
-  def devices(channel:)
-    devices = cache.get(channel_key(channel))
-    return [] unless devices.present?
-    JSON.parse(devices).map { |d| Device.new(d) }
+  def delete(channel:)
+    cache.del(channel_key(channel))
   end
 
   private

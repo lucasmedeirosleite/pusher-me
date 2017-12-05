@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import * as PusherLib from 'pusher-js';
-import Webhook from '../../../lib/webhook';
 
 const API_KEY = process.env.PUSHER_APP_KEY;
 const CLUSTER = process.env.PUSHER_CLUSTER;
@@ -13,8 +12,7 @@ export default class Pusher extends Component {
 
     this.state = {
       pusher: null,
-      socket: null,
-      webhook: new Webhook()
+      socket: null
     };
   }
 
@@ -37,16 +35,6 @@ export default class Pusher extends Component {
       this.props.handler(data);
     });
 
-    socket.bind('pusher:subscription_succeeded', () => {
-      const data = this.deviceData();
-
-      this.state.webhook.subscribe(data).then((response) => {
-        console.log('Successfully subscribed');
-      }).catch((data) => {
-        console.log('Unable to subscribe to channel');
-      });
-    });
-
     this.setState({
       pusher: pusher,
       socket: socket
@@ -56,30 +44,12 @@ export default class Pusher extends Component {
   componentWillUnmount() {
     const { webhook, pusher } = this.state;
 
-    webhook.unsubscribe(this.props.channel, pusher.connection.socket_id).then(() => {
-      this.state.socket.unbind(this.props.event);
-      this.state.socket.unsubscribe(this.props.channel);
-      this.state.socket.disconnect();
-      console.log('Successfully unsubscribed');
-    }).catch((data) => {
-      console.log('Unable to unsubscribe channel');
-    });
-  }
-
-  deviceData() {
-    return {
-      channel: {
-        name: this.props.channel,
-        user_id: this.props.params.userId,
-        device: {
-          socket_id: this.state.pusher.connection.socket_id,
-          platform: 'Web'
-        }
-      }
-    };
+    this.state.socket.unbind(this.props.event);
+    this.state.socket.unsubscribe(this.props.channel);
+    this.state.socket.disconnect();
   }
 
   render() {
-    return <div />;
+    return false;
   }
 }
